@@ -33,7 +33,8 @@ public static void main(String[] args) throws FileNotFoundException {
         //Create Scanner for input file
         Scanner input = new Scanner(inputFile); //create PrintWriter to print on the output file.
         PrintWriter output = new PrintWriter("output.txt");
-        output.print("Welcome to the KAU Grade Book.");
+        output.println("Welcome to the FCIT Grade Book.");
+        output.println();
 
         //start reading file and store data:
         int numCourses = input.nextInt();//the length of the array
@@ -41,21 +42,28 @@ public static void main(String[] args) throws FileNotFoundException {
 
 
         //Loop to create FCITcourse roaster objs:
-        for (int i=0; i<numCourses; i++) { 
-        courses[i] = new FCITcourseRoster(); courses[i].setCourseNumber(input.next());
+        output.println("The following course(s) have been added to the database:");
+        for (int i=0; i<numCourses; i++) {
+        String courseNum = input.next();
+        courses[i] = new FCITcourseRoster(); courses[i].setCourseNumber(courseNum);
+            output.println(courses[i].getCourseNumber());
         }// end of for loop
-
+        output.println();
         //loop over student and make commands.
         while (input.hasNext()) {
 
             switch (input.next()) {
                 case "ADDRECORD": {
                    addRecord(input, output, courses);
-                }
+                }break;
 
                 case "SEARCHBYID": {
-                   // searchStudentsByID(input, output, students);
-                }
+                   //searchStudentsByID(input, output, students);
+                }break;
+                        
+                case "DELETERECORD": {
+                   deleteRecord(input, output, courses);
+                }break;
                 case "SEARCHBYNAME": {
                     //searchStudentsByName(input, output, students);
                 }
@@ -63,8 +71,8 @@ public static void main(String[] args) throws FileNotFoundException {
                    // displayStatistics(input, output, students, courseName, instructorFirstName, instructorLastName);
                 }
                 case "QUIT": {
-                    output.print("Thank you for using the KAU Grade Book."
-                            + "/nGoodBye.");
+                    //output.print("Thank you for using the KAU Grade Book."
+                      //      + "/nGoodBye.");
                    //close files
                     
 
@@ -75,18 +83,20 @@ public static void main(String[] args) throws FileNotFoundException {
         }
         input.close();
         output.close();
+        courses[1].PrintList();
+        System.out.println(courses[0].getCourseNumber());
     }
 
 
-public void addRecord(Scanner input, PrintWriter out, String [] courses){
-    String course = input.next();
-    int id = input.nextInt();
-    String fName = input.next();
-    String lName = input.next();
-    int firstExam = input.nextInt();
-    int secondExam = input.nextInt();
-    int finalExam = input.nextInt();
-    
+public static void  addRecord(Scanner input, PrintWriter output, FCITcourseRoster [] courses){
+        String course = input.next();
+        int id = input.nextInt();
+        String fName = input.next();
+        String lName = input.next();
+        int firstExam = input.nextInt();
+        int secondExam = input.nextInt();
+        int finalExam = input.nextInt();
+
 //2 . calculate and save the final grade of student:
         double fGrade = (firstExam * 0.3) + (secondExam * 0.3) + (finalExam * 0.4);
 
@@ -94,15 +104,35 @@ public void addRecord(Scanner input, PrintWriter out, String [] courses){
         char letterGrade = getLetterGrade(fGrade);
 
 //4 .  make a new Student object to add.
-        Student newStudent = new Student(course, id, fName, lName, fGrade, letterGrade);
-        
- //5 .now we insert the new student in the correct course number:
+        //5 .now we insert the new student in the correct course number:
         for (int i = 0; i < courses.length; i++) {
-            if(course.equalsIgnoreCase(courses[i])){
-            
+            if (courses[i].getCourseNumber().equalsIgnoreCase(course)) {
+                courses[i].insert(course, id, fName, lName, fGrade, letterGrade);
+                output.println("Command: ADDRECORD");
+                output.println("\t\t" + fName + " " + lName + " (ID# " + id + ") has been added to " + course);
+                output.print("\t\tHis final grade is " + fGrade + " (" + letterGrade + ")");
+                output.println();
+
             }
-        
+        }
     }
+/////////////////
+public static void deleteRecord(Scanner input, PrintWriter output, FCITcourseRoster [] courses){
+    output.println("Command: DELETERECORD");
+    String targetID = input.next();
+    int targetIDInt = Integer.parseInt(targetID);//did double identifying becaus it was making mismatch exception
+    Student target = courses[1].findNode(111);
+    output.println(target.getFirstName());
+   
+//    for (int i = 0; i < courses.length; i++) {
+//        target = courses[i].findNode(targetIDInt);
+//        if(target == null)
+//            continue;
+//        output.println("\t\t"+target.getFirstName()+" "+ target.getLastName()+" (ID# "+target.getID()+") has been deleted from "+courses[i]);
+//        courses[i].delete(targetIDInt);
+//
+//    }
+//}
 }
 
 public static char getLetterGrade(double fGrade) {

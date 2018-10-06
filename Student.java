@@ -21,20 +21,34 @@ public class Student {
   private double finalGrade;
   private char letterGrade;
   private static int numStudents;
-  private Student next;
+  private Student next;//most important for not losing my linked list
   
-  //constructor:
+  //constructors:
+  public Student(){//must initialize first Student to link to the next one
+  next = null;
+  }
+  
   public Student(String courseNumber, int ID, String firstName, String lastName, double finalGrade, char letterGrade){
     this. courseNumber = courseNumber;
     this.ID = ID;
     this.firstName = firstName;
     this.lastName = lastName;
     this.finalGrade = finalGrade;
+    this.letterGrade = letterGrade;
+    next = null;//inserting node at the end.(or initiating a linked list)
     }
-
-    Student(int ID) {
-        this.ID = ID;
-    }
+  
+  public Student(String courseNumber, int ID, String firstName, String lastName, double finalGrade, char letterGrade, Student next){
+    this. courseNumber = courseNumber;
+    this.ID = ID;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.finalGrade = finalGrade;
+    this.letterGrade = letterGrade;
+    this.next = next;//inserting a node before another
+  }
+  
+  //Accessors and mutators
 
     public String getCourseNumber() {
         return courseNumber;

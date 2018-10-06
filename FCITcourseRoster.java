@@ -28,7 +28,7 @@ public class FCITcourseRoster {
         this.courseNumber = courseNumber;
     }
 
-    private String getCourseNumber() {
+    public String getCourseNumber() {
         return courseNumber;
     }
 
@@ -66,37 +66,116 @@ public class FCITcourseRoster {
         return false;
     } 
     /////////
-    //4.find node: looks like it is not needed atm
-    //////////
-    //5.inser node(add an new student node to the lot!)
-    
-    public void insert(int newStudentID){//change and modify
-    head = insert(head, newStudentID);
+    //4.delete node
+    public   void delete(int data) {
+        head = delete(head, data);
     }
-    
-    private Student insert(Student head, int newStudentID ){
-    //if there is no list then this node will be the first
-        if(head ==null || head.getID()> newStudentID){
-            head = new Student(newStudentID);
-            return head;
-        }
-        else{//(that there exists a list) insert it at the right location:
-            Student pointer = head;//help pointer to traverse
-            //now we will traverse the nodes for the correct location:
-            while(pointer.getNext()!=null){
-                if(pointer.getNext().getID()>newStudentID){
-                    //so the correct location is found
-                break;
+    //
+    // LLnode | delete(LLnode, value)
+    //
+
+    private Student delete(Student head, int ID) {
+        // only delete if the list is not empty
+        if (!isEmpty()) {
+            //when the target of delete is head
+            if (head.getID()== ID) {
+                head = head.getNext();
+            } 
+            else {
+                // when its not the head by traversing with help pointer
+                Student helpPtr = head;
+                // Traverse to correct deletion point
+                while (helpPtr.getNext() != null) {
+                    if (helpPtr.getNext().getID() == ID) {
+                        helpPtr.setNext(helpPtr.getNext().getNext());
+                        break; //skipping the node to another to delete :)
+                    }
+                    helpPtr = helpPtr.getNext();
                 }
-                pointer = pointer.getNext();//means correct location is still not found
-        
-        }// end of while loop, now is time to make the next node point to its successor
-         //while the predessessor is ointing the  new node!
-        Student newStudent = new Student(newStudentID);
-        pointer.setNext(newStudent);
+            }
+            // return the possibly updated head of the list
+            return head;
         }
         return head;
     }
+    //////////
+    //5.insert node(add an new student node to the lot!)
+    
+    public void insert(String courseNum, int ID, String fName, String lName, double fGrade, char letterGrade) {
+        head = insert(head, courseNum, ID, fName, lName, fGrade, letterGrade);
+    }
+    //
+    // LLnode | insert(LLnode, value)
+    //
+
+    private Student insert(Student head,String courseNum, int ID, String fName, String lName, double fGrade, char letterGrade) {
+        
+        if (head == null || head.getID() > ID) {
+            head = new Student(courseNum, ID, fName, lName, fGrade, letterGrade);// this node is going to be the head
+            return head;
+        } // insert the new node at the correct location
+        else {
+            // We need to traverse to the correct insertion location...so we need a help ptr
+            Student helpPtr = head;
+            // traverse to place in the correct spot
+            while (helpPtr.getNext() != null) {
+                if (helpPtr.getNext().getID()> ID) {
+                    break;// when found break out of thr loop
+                }
+                helpPtr = helpPtr.getNext();
+            }
+            // create new node(when it is not the head). Set its next to the successor
+            // And then make the predecessor node point to the new node
+            Student newStudent = new Student(courseNum, ID, fName, lName, fGrade, letterGrade, helpPtr.getNext());
+            helpPtr.setNext(newStudent);
+        }
+        // Return head
+        return head;
+    }
+    ///////////////////////
+    // find and return a specific node:
+    public Student findNode(int data) {
+        return findNode(head, data);
+    }
+    //
+    // boolean | search(LLnode, int)
+    //
+
+    private Student findNode(Student p, int ID) {
+        Student helpPtr = p;
+        while (helpPtr != null) {
+            if (helpPtr.getID()== ID) {
+                return helpPtr;// if founed return that speceific help pointer
+            }
+            helpPtr = helpPtr.getNext();
+        }
+        return null;//if not return null
+    }
+    //////
+    //printing nodes:
+    public void PrintList() {
+        PrintList(head);
+    }
+    //
+    // void | PrintList(LLnode)
+    //
+
+    private void PrintList(Student head) {
+        // We need to traverse...so we need a help ptr
+        Student
+                helpPtr = head;
+        // Traverse to correct insertion point
+        while (helpPtr != null) {
+            // Print the data value of the node
+            System.out.print(helpPtr.getLastName()+ ", ");
+            // Step one node over   
+            helpPtr = helpPtr.getNext();
+        }
+        System.out.println();
+    }
+            
+            
+    
     
     
     
